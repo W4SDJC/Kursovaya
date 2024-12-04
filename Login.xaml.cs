@@ -20,6 +20,7 @@ namespace Kursovaya2
     public partial class Login : Window
     {
         DataBase dataBase = new DataBase();
+
         public Login()
         {
             InitializeComponent();
@@ -93,5 +94,49 @@ namespace Kursovaya2
         {
             ErrorLabel.Content = "";
         }
+
+        private void ShowPasswordCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            // Устанавливаем текст в TextBox, показывая пароль
+            var password = passwordBox.Password;
+            passwordBox.Visibility = Visibility.Collapsed; // Скрываем PasswordBox
+            var textBox = new TextBox { Text = password, Width = 200 }; // Создаем новый TextBox для отображения пароля
+            textBox.LostFocus += (s, args) =>
+            {
+                passwordBox.Password = textBox.Text; // Обновляем PasswordBox при потере фокуса
+                passwordBox.Visibility = Visibility.Visible; // Возвращаем PasswordBox
+
+            };
+            textboxPass.Text = password;
+            textboxPass.Visibility = Visibility.Visible;
+
+        }
+
+        private void ShowPasswordCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // Возвращаем PasswordBox и скрываем текстовый элемент
+
+            passwordBox.Visibility = Visibility.Visible; // Показываем PasswordBox
+            textboxPass.Visibility = Visibility.Collapsed;
+            passwordBox.Password = textboxPass.Text;
+        }
+
+        private void passwordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            textboxPass.Text = passwordBox.Password.ToString();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void textboxPass_Loaded(object sender, RoutedEventArgs e)
+        {
+            textboxPass.Visibility = Visibility.Collapsed;
+
+        }
     }
+
+
 }

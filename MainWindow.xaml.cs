@@ -17,9 +17,6 @@ using System.Windows.Shapes;
 
 namespace Kursovaya2
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         DataBase dataBase = new DataBase();

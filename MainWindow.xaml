@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kursovaya2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" 
+        Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
     <Grid x:Name="MainFrid">
         <Grid x:Name="LeftGrid" Margin="0,0,300,0">
             <DataGrid x:Name="MyDataGrid" AutoGenerateColumns="True"/>
