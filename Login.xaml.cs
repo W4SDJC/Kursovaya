@@ -17,11 +17,9 @@ using System.Reflection.Emit;
 
 namespace Kursovaya2
 {
-
     public partial class Login : Window
     {
         DataBase dataBase = new DataBase();
-
         public Login()
         {
             InitializeComponent();
