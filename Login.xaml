@@ -1,0 +1,24 @@
+﻿<Window x:Class="Kursovaya2.Login"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kursovaya2"
+        mc:Ignorable="d"
+        Title="Login" 
+        SizeToContent="WidthAndHeight"
+        
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <StackPanel Height="230" Width="220">
+    <Grid Height="230" Width="220">
+        <Label x:Name="LoginLabel" Content="Login" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Height="37" Width="49" Background="{x:Null}" FontSize="16"/>
+        <TextBox x:Name="textboxLogin" HorizontalAlignment="Center" Margin="0,47,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="121" FontSize="14" TabIndex="1" TextChanged="textboxLogin_TextChanged"/>
+        <Label x:Name="PassLabel" Content="Password" HorizontalAlignment="Center" Margin="0,65,0,0" VerticalAlignment="Top" FontSize="16" Background="{x:Null}"/>
+        <TextBox x:Name="textboxPass" HorizontalAlignment="Center" Margin="0,96,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="121" FontSize="14" TabIndex="2" TextChanged="textboxPass_TextChanged"/>
+        <Button x:Name="LoginButton" Content="Login" Margin="0,122,0,0" HorizontalAlignment="Center" Width="62" Height="29" VerticalAlignment="Top" Click="Button_Click" IsDefault="True"/>
+        <Button x:Name="RegistrationButton" Content="Registration" Margin="0,155,0,0" HorizontalAlignment="Center" Width="86" Height="29" VerticalAlignment="Top" Click="RegButton"/>
+        <Label x:Name="ErrorLabel" HorizontalAlignment="Center" Margin="0,189,0,10" Width="200" Background="{x:Null}" HorizontalContentAlignment="Center" Foreground="#FFC80000"/>
+
+    </Grid>
+    </StackPanel>
+</Window>
