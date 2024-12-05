@@ -9,7 +9,7 @@ namespace Kursovaya2
 {
     class DataBase
     {
-        SqlConnection sqlConnection = new SqlConnection(@"Data Source=W4SD-PC; Initial Catalog=Учет отказа оборудования; Integrated Security=True");
+        SqlConnection sqlConnection = new SqlConnection(@"Data Source=paypal-ap.gl.at.ply.gg,18136; Initial Catalog=Учет отказа оборудования;User ID=sa;Password=123456789; TrustServerCertificate=True");
         public void openconnection()
         {
             if (sqlConnection.State == System.Data.ConnectionState.Closed)
@@ -17,7 +17,7 @@ namespace Kursovaya2
                 sqlConnection.Open();
             }
         }
-
+        //sql
         public void closeConnection()
         {
             if (sqlConnection.State == System.Data.ConnectionState.Open)
