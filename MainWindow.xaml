@@ -13,7 +13,7 @@
             <DataGrid x:Name="MyDataGrid" AutoGenerateColumns="True"/>
         </Grid>
         <Grid x:Name="FilterGrid" Background="#FFE8E8E8" HorizontalAlignment="Right" Width="300">
-            <Button x:Name="DeleteButton" Content="Delete" Margin="0,0,0,10" Width="84" HorizontalAlignment="Center" Height="25" VerticalAlignment="Bottom"/>
+            <Button x:Name="DeleteButton" Content="Delete" Margin="0,0,0,10" Width="84" HorizontalAlignment="Center" Height="25" VerticalAlignment="Bottom" Click="DeleteButton_Click"/>
             <Button x:Name="ChangeButton" Content="Change" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="25" Width="85"/>
             <Label x:Name="FiltersLabel" Content="Filters" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Width="85" Height="45" HorizontalContentAlignment="Center" FontSize="24"/>
             <Button x:Name="FillButton" Content="Fill data" Margin="0,0,204,10" Width="85" Height="25" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>

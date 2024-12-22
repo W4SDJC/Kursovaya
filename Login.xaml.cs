@@ -56,33 +56,10 @@ namespace Kursovaya2
 
         private void RegButton(object sender, RoutedEventArgs e)
         {
-            var loginUser = textboxLogin.Text;
-            var passUser = textboxPass.Text;
-
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            DataTable dt = new DataTable();
-
-            string querystring = $"select id_user, login, password from Accounts where login='{loginUser}' and password = '{passUser}'";
-
-            SqlCommand command = new SqlCommand(querystring, dataBase.GetConnection());
-
-            adapter.SelectCommand = command;
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count == 1)
-            {
-                MessageBox.Show("Login succesfull!", "Succesfull!");
-                MainWindow frm = new MainWindow();
-                this.Hide();
-                frm.ShowDialog();
-                this.Show();
-            }
-            else
-            {
-                
-
-
-            }
+            Registration regForm = new Registration();
+            this.Hide();
+            regForm.ShowDialog();
+            this.Show();
         }
 
         private void textboxLogin_TextChanged(object sender, TextChangedEventArgs e)

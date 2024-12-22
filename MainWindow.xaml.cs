@@ -57,5 +57,10 @@ namespace Kursovaya2
             command.Dispose();
             MWindow.Title = $"Редактирование таблицы {selectedTable}";
         }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
