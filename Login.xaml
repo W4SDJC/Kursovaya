@@ -7,7 +7,6 @@
         mc:Ignorable="d"
         Title="Login" 
         SizeToContent="WidthAndHeight"
-        
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <StackPanel Height="230" Width="220">
         <Grid Height="230" Width="220">
@@ -21,6 +20,17 @@
             <PasswordBox x:Name="passwordBox" HorizontalAlignment="Center" Margin="0,96,0,0" VerticalAlignment="Top" Width="121" Height="21" PasswordChanged="passwordBox_PasswordChanged" TabIndex="2"/>
             <CheckBox HorizontalAlignment="Left" Margin="174,99,0,0" VerticalAlignment="Top" Checked="ShowPasswordCheckBox_Checked" Unchecked="ShowPasswordCheckBox_Unchecked"/>
             <Button HorizontalAlignment="Left" Margin="219,0,0,0" VerticalAlignment="Top" IsCancel="True" Click="Button_Click_1" Height="15" Width="16" Background="{x:Null}"/>
+            <Button x:Name="ChangeIPButton" VerticalAlignment="Top" Height="21" BorderBrush="{x:Null}" Margin="0,0,199,0" Click="ChangeIPButton_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="/setting-gear.png" TileMode="None" Stretch="Uniform"/>
+
+                </Button.Background>
+                <Button.ToolTip>
+                    <ToolTip>
+                        Change server ip. Admins only!
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
 
         </Grid>
     </StackPanel>

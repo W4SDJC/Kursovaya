@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=127.0.0.1,14332; Initial Catalog=Учет отказа оборудования;User ID=sa;Password=123456789; TrustServerCertificate=True"
+  }
+}

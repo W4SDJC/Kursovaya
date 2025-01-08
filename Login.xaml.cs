@@ -35,25 +35,47 @@ namespace Kursovaya2
             DataTable dt = new DataTable();
 
             string querystring = $"select id_user, login, password from Accounts where login='{loginUser}' and password = '{passUser}'";
-
-            SqlCommand command = new SqlCommand(querystring, dataBase.GetConnection());
-
-            adapter.SelectCommand = command;
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count == 1)
+            try
             {
-                MainWindow frm = new MainWindow();
-                this.Hide();
-                frm.ShowDialog();
-                this.Show();
+                SqlCommand command = new SqlCommand(querystring, dataBase.GetConnection());
+
+                adapter.SelectCommand = command;
+                adapter.Fill(dt);
             }
-            else
+            catch (SqlException ex)
             {
-                ErrorLabel.Content = "Login failed, account not finded!";
+                if (ex.Number == 1225)
+                {
+                    MessageBox.Show(
+                        "Server connection error. Incorrect data may have been entered.",
+                        "Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "An unknown error has occurred.",
+                        "Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+            }
+            finally
+            {
+                if (dt.Rows.Count == 1)
+                {
+                    MainWindow frm = new MainWindow();
+                    this.Hide();
+                    frm.ShowDialog();
+                    this.Show();
+                }
+                else
+                {
+                    ErrorLabel.Content = "Login failed, account not finded!";
+                }
             }
         }
-
         private void RegButton(object sender, RoutedEventArgs e)
         {
             Registration regForm = new Registration();
@@ -113,7 +135,13 @@ namespace Kursovaya2
             textboxPass.Visibility = Visibility.Collapsed;
 
         }
+
+        private void ChangeIPButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeServerIP frm = new ChangeServerIP();
+            this.Hide();
+            frm.ShowDialog();
+            this.Show();
+        }
     }
-
-
 }
