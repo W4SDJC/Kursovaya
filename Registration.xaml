@@ -5,19 +5,140 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kursovaya2"
         mc:Ignorable="d"
-        Title="Registration" Height="366" Width="330"
-        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
-    <Grid>
-        <TextBox x:Name="LoginTextBox" HorizontalAlignment="Center" Margin="0,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" FontSize="18"/>
-        <Label Content="Registration" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Height="41" Width="198" FontSize="20" Background="{x:Null}" HorizontalContentAlignment="Center"/>
-        <TextBox x:Name="PassTextBox" HorizontalAlignment="Center" Margin="0,153,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" FontSize="18"/>
-        <TextBox x:Name="ConfPassTextBox" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" FontSize="18" Margin="0,204,0,0"/>
-        <Label Content="Login" HorizontalAlignment="Left" Margin="66,68,0,0" VerticalAlignment="Top" Background="{x:Null}" HorizontalContentAlignment="Center"/>
-        <Label Content="Login" HorizontalAlignment="Left" Margin="66,68,0,0" VerticalAlignment="Top" Background="{x:Null}" HorizontalContentAlignment="Center"/>
-        <Label Content="Password" HorizontalAlignment="Left" Margin="66,127,0,0" VerticalAlignment="Top" Background="{x:Null}" HorizontalContentAlignment="Center"/>
-        <Label Content="Сonfirm the password" HorizontalAlignment="Left" Margin="66,179,0,0" VerticalAlignment="Top" Background="{x:Null}" HorizontalContentAlignment="Center"/>
-        <Button x:Name="RegButton" Content="Registration" HorizontalAlignment="Left" Margin="184,253,0,0" VerticalAlignment="Top" Width="80" Height="35" Click="Button_Click"/>
-        <Label x:Name="ErrorLabel" HorizontalAlignment="Left" Margin="66,227,0,0" VerticalAlignment="Top" Background="{x:Null}" HorizontalContentAlignment="Center" Foreground="Red"/>
+        Title="Регистрация" Height="580" Width="498" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#F5F5F5">
+    <Window.Resources>
+        <!-- Стиль для кнопки с градиентом и эффектами -->
+        <Style TargetType="Button" x:Key="GreenGradientButtonStyle">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#27AE60" Offset="0"/>
+                        <GradientStop Color="#2ECC71" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="1" 
+                                CornerRadius="20">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#2ECC71" Offset="0"/>
+                                            <GradientStop Color="#27AE60" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#229954" Offset="0"/>
+                                            <GradientStop Color="#27AE60" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <TextBlock Text="Регистрация" 
+                   FontSize="24" 
+                   FontWeight="Bold" 
+                   Margin="0,0,0,20" 
+                   HorizontalAlignment="Center" 
+                   Foreground="#2c3e50"/>
+
+        <Border Grid.Row="1" Background="White" 
+                BorderBrush="#ecf0f1" 
+                BorderThickness="1" 
+                CornerRadius="10" 
+                Padding="20" 
+                Margin="0,10,0,0">
+            <StackPanel>
+                <Border CornerRadius="5" Background="White" BorderBrush="#bdc3c7" BorderThickness="1" Margin="0,0,0,10">
+                    <Label Content="Логин" 
+                           FontSize="14" 
+                           Foreground="#34495e" 
+                           Padding="10" 
+                           HorizontalAlignment="Left"/>
+                </Border>
+                <TextBox x:Name="LoginTextBox" 
+                         FontSize="14" 
+                         Height="40" 
+                         BorderBrush="#bdc3c7" 
+                         BorderThickness="1" 
+                         Padding="10" 
+                         Background="White" 
+                         />
+
+                <Border CornerRadius="5" Background="White" BorderBrush="#bdc3c7" BorderThickness="1" Margin="0,10,0,10">
+                    <Label Content="Пароль" 
+                           FontSize="14" 
+                           Foreground="#34495e" 
+                           Padding="10" 
+                           HorizontalAlignment="Left"/>
+                </Border>
+                <PasswordBox x:Name="PassTextBox" 
+                             FontSize="14" 
+                             Height="40" 
+                             BorderBrush="#bdc3c7" 
+                             BorderThickness="1" 
+                             Padding="10" 
+                             Background="White" 
+                            />
+
+                <Border CornerRadius="5" Background="White" BorderBrush="#bdc3c7" BorderThickness="1" Margin="0,10,0,10">
+                    <Label Content="Подтвердите пароль" 
+                           FontSize="14" 
+                           Foreground="#34495e" 
+                           Padding="10" 
+                           HorizontalAlignment="Left"/>
+                </Border>
+                <PasswordBox x:Name="ConfPassTextBox" 
+                             FontSize="14" 
+                             Height="40" 
+                             BorderBrush="#bdc3c7" 
+                             BorderThickness="1" 
+                             Padding="10" 
+                             Background="White" 
+                             />
+
+                <Label x:Name="ErrorLabel" 
+                       FontSize="12" 
+                       Foreground="Red" 
+                       Margin="0,10,0,0" 
+                       HorizontalAlignment="Left"/>
+
+                <Button x:Name="RegButton" 
+                        Content="Зарегистрироваться" 
+                        Style="{StaticResource GreenGradientButtonStyle}" 
+                        Width="260" 
+                        Height="48" 
+                        Click="Button_Click"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
