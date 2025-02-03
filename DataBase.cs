@@ -20,7 +20,7 @@ namespace Kursovaya2
         {
             // Здесь можно использовать конфигурационный файл для хранения строки подключения
             // Но для простоты я использую строку подключения напрямую
-            return "server=localhost;user=root;password=yourpassword;database=УчетОтказовОборудования;";
+            return "server=147.185.221.25;port=46799;user=root1;password=yourpassword;database=УчетОтказовОборудования;";
         }
 
         // Метод для открытия подключения

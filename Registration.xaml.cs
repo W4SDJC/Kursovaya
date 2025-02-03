@@ -44,7 +44,7 @@ namespace Kursovaya2
             else
             {
                 string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password); // Хэширование пароля
-                dataBase.ExecuteQuery($"INSERT INTO Учетныезаписи (Логин, Пароль, Роль) VALUES ('{loginUser}', '{hashedPassword}', 'user')");
+                dataBase.ExecuteQuery($"INSERT INTO УчетныеЗаписи (Логин, Пароль, Роль) VALUES ('{loginUser}', '{hashedPassword}', 'user')");
                 ErrorLabel.Foreground = Brushes.Green;
                 ErrorLabel.Content = "Регистрация успешна.";
             }
