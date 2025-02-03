@@ -221,14 +221,14 @@ namespace Kursovaya2
         private List<ComboBoxItem> GetForeignKeyValues(string tableName)
         {
             List<ComboBoxItem> items = new List<ComboBoxItem>();
-            string query = $"SELECT id, {GetDisplayColumn(tableName)} FROM {tableName}";
+            string query = $"SELECT id, {GetDisplayColumn(tableName)} AS DisplayName FROM {tableName}";
             DataTable dt = dataBase.GetDataTable(query);
             foreach (DataRow row in dt.Rows)
             {
                 ComboBoxItem item = new ComboBoxItem
                 {
                     Id = Convert.ToInt32(row["id"]),
-                    DisplayName = row[GetDisplayColumn(tableName)].ToString()
+                    DisplayName = row["DisplayName"].ToString()
                 };
                 items.Add(item);
             }
@@ -240,11 +240,11 @@ namespace Kursovaya2
             switch (tableName)
             {
                 case "ПроизводственныеУчастки":
-                    return "НомерУчастка";
+                    return "Название";
                 case "Оборудование":
-                    return "НомерОборудования";
+                    return "Название";
                 case "Сотрудники":
-                    return "ТабельныйНомер";
+                    return "Имя";
                 // Add more cases for other tables as needed
                 default:
                     return "id";
@@ -302,7 +302,7 @@ namespace Kursovaya2
                 }
 
                 // Проверка уникальности НомерУчастка
-                if (selectedTable == "производственныеучастки")
+                if (selectedTable == "ПроизводственныеУчастки")
                 {
                     string номерУчастка = GetValueFromControl("НомерУчастка");
                     if (IsDuplicate("ПроизводственныеУчастки", "НомерУчастка", номерУчастка))
@@ -313,7 +313,7 @@ namespace Kursovaya2
                 }
 
                 // Проверка уникальности НомерОборудования
-                if (selectedTable == "оборудование")
+                if (selectedTable == "Оборудование")
                 {
                     string номерОборудования = GetValueFromControl("НомерОборудования");
                     if (IsDuplicate("Оборудование", "НомерОборудования", номерОборудования))
@@ -323,7 +323,7 @@ namespace Kursovaya2
                     }
                 }
                 // Проверка уникальности Табельного номера
-                if (selectedTable == "сотрудники")
+                if (selectedTable == "Сотрудники")
                 {
                     string табельныйНомер = GetValueFromControl("ТабельныйНомер");
                     if (IsDuplicate("Сотрудники", "ТабельныйНомер", табельныйНомер))
@@ -333,7 +333,7 @@ namespace Kursovaya2
                     }
                 }
                 // Проверка отказа оборудования
-                if (selectedTable == "отказыоборудования")
+                if (selectedTable == "ОтказыОборудования")
                 {
                     string оборудованиеID = GetValueFromControl("ОборудованиеID");
                     if (IsDuplicateFailure(оборудованиеID))
@@ -414,7 +414,7 @@ namespace Kursovaya2
                 }
 
                 // Проверка уникальности НомерУчастка
-                if (selectedTable == "производственныеучастки")
+                if (selectedTable == "ПроизводственныеУчастки")
                 {
                     string номерУчастка = GetValueFromControl("НомерУчастка");
                     if (IsDuplicate("ПроизводственныеУчастки", "НомерУчастка", номерУчастка))
@@ -425,7 +425,7 @@ namespace Kursovaya2
                 }
 
                 // Проверка уникальности НомерОборудования
-                if (selectedTable == "оборудование")
+                if (selectedTable == "Оборудование")
                 {
                     string номерОборудования = GetValueFromControl("НомерОборудования");
                     if (IsDuplicate("Оборудование", "НомерОборудования", номерОборудования))

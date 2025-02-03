@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Generic;
+using System.Windows.Input;
 namespace Kursovaya2
 {
     public partial class MainWindow : Window
@@ -21,12 +22,58 @@ namespace Kursovaya2
             // Устанавливаем логин в Label
             LabelCurrentUser.Content = currentUserLogin;
             ComboBoxData_Loaded(null, null);
+            MyDataGrid.Focus();
+
+            // Подписываемся на событие PreviewKeyDown
+            MyDataGrid.PreviewKeyDown += MyDataGrid_PreviewKeyDown;
         }
         // Существующий конструктор без параметров (можно удалить, если он не нужен)
         public MainWindow()
         {
             InitializeComponent();
             ComboBoxData_Loaded(null, null);
+            MyDataGrid.Focus();
+            // Подписываемся на событие PreviewKeyDown
+            MyDataGrid.PreviewKeyDown += MyDataGrid_PreviewKeyDown;
+        }
+        private void MyDataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                if (MyDataGrid.SelectedItem != null)
+                {
+                    // Вызываем метод удаления
+                    DeleteButton_Click(this, new RoutedEventArgs());
+                }
+                else
+                {
+                    MessageBox.Show("Пожалуйста, выберите строку для удаления.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                e.Handled = true; // Предотвращаем дальнейшую обработку события
+            }
+        }
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            // Отладочное сообщение для проверки, что метод вызывается
+            System.Diagnostics.Debug.WriteLine($"Key pressed: {e.Key}");
+
+            if (e.Key == Key.F5)
+            {
+                // Вызываем метод обновления
+                RefreshButton_Click(this, new RoutedEventArgs());
+                e.Handled = true; // Предотвращаем дальнейшую обработку события
+            }
+            else if (e.Key == Key.Delete)
+            {
+                // Отладочное сообщение для проверки, что Delete нажата
+                System.Diagnostics.Debug.WriteLine("Delete key pressed");
+
+                // Вызываем метод удаления
+                DeleteButton_Click(this, new RoutedEventArgs());
+                e.Handled = true; // Предотвращаем дальнейшую обработку события
+            }
         }
         private void ComboBoxData_Loaded(object sender, RoutedEventArgs e)
         {
@@ -114,6 +161,7 @@ namespace Kursovaya2
             {
                 MessageBox.Show("Ошибка при загрузке данных: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            MyDataGrid.Focus();
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -208,11 +256,16 @@ namespace Kursovaya2
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            // Логика для удаления данных
             if (MyDataGrid.SelectedItem != null)
             {
                 DataRowView selectedRow = (DataRowView)MyDataGrid.SelectedItem;
-                string selectedTable = TNComboBox.SelectedItem.ToString().Trim();
+                string selectedTable = TNComboBox.SelectedItem?.ToString().Trim();
+
+                if (string.IsNullOrEmpty(selectedTable))
+                {
+                    MessageBox.Show("Не выбрана таблица для удаления.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
                 string primaryKey = GetPrimaryKey(selectedTable);
                 if (primaryKey != null)
@@ -221,11 +274,22 @@ namespace Kursovaya2
                     string confirmMessage = $"Вы уверены, что хотите удалить запись с ID {id}?";
                     var result = MessageBox.Show(confirmMessage, "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
+                    // Отладочное сообщение
+                    System.Diagnostics.Debug.WriteLine($"SelectedTable: {selectedTable}, PrimaryKey: {primaryKey}, ID: {id}, Confirmation Result: {result}");
+
                     if (result == MessageBoxResult.Yes)
                     {
                         string deleteQuery = $"DELETE FROM {selectedTable} WHERE {primaryKey} = {id}";
-                        dataBase.ExecuteQuery(deleteQuery);
-                        TNComboBox_SelectionChanged_1(null, null);
+                        try
+                        {
+                            dataBase.ExecuteQuery(deleteQuery);
+                            MessageBox.Show("Запись успешно удалена.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                            TNComboBox_SelectionChanged_1(null, null);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Ошибка при удалении записи: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                 }
                 else
@@ -281,16 +345,16 @@ namespace Kursovaya2
 
             switch (selectedTable)
             {
-                case "сотрудники":
-                    queryString = $@"SELECT * FROM сотрудники WHERE имя LIKE '%{searchText}%'";
+                case "Сотрудники":
+                    queryString = $@"SELECT * FROM Сотрудники WHERE имя LIKE '%{searchText}%'";
                     break;
 
-                case "производственныеучастки":
-                    queryString = $@"SELECT * FROM производственныеучастки WHERE название LIKE '%{searchText}%'";
+                case "ПроизводственныеУчастки":
+                    queryString = $@"SELECT * FROM ПроизводственныеУчастки WHERE название LIKE '%{searchText}%'";
                     break;
 
-                case "оборудование":
-                    queryString = $@"SELECT * FROM оборудование WHERE название LIKE '%{searchText}%'";
+                case "Оборудование":
+                    queryString = $@"SELECT * FROM Оборудование WHERE название LIKE '%{searchText}%'";
                     break;
 
                 case "ТехническиеОсмотры":
@@ -329,6 +393,7 @@ namespace Kursovaya2
             {
                 MessageBox.Show("Ошибка при выполнении поиска: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
         }
         private void MyDataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
@@ -378,7 +443,7 @@ namespace Kursovaya2
         private List<ProductionArea> GetProductionAreas()
         {
             List<ProductionArea> areas = new List<ProductionArea>();
-            string query = "SELECT id, название FROM производственныеучастки";
+            string query = "SELECT id, название FROM ПроизводственныеУчастки";
             DataTable dt = dataBase.GetDataTable(query);
             foreach (DataRow row in dt.Rows)
             {
@@ -394,7 +459,7 @@ namespace Kursovaya2
         private List<Employee> GetEmployees()
         {
             List<Employee> employees = new List<Employee>();
-            string query = "SELECT id, табельныйномер, имя, должность FROM сотрудники";
+            string query = "SELECT id, табельныйномер, имя, должность FROM Сотрудники";
             DataTable dt = dataBase.GetDataTable(query);
             foreach (DataRow row in dt.Rows)
             {
@@ -412,7 +477,7 @@ namespace Kursovaya2
         private List<Equipment> GetEquipment()
         {
             List<Equipment> equipmentList = new List<Equipment>();
-            string query = "SELECT id, номероборудования, название, тип FROM оборудование";
+            string query = "SELECT id, номероборудования, название, тип FROM Оборудование";
             DataTable dt = dataBase.GetDataTable(query);
             foreach (DataRow row in dt.Rows)
             {

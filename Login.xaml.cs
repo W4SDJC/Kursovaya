@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using BCrypt.Net;
@@ -19,33 +21,62 @@ namespace Kursovaya2
             string loginUser = textboxLogin.Text.Trim();
             string passUser = passwordBox.Password;
 
+            // Проверка на пустые поля
             if (string.IsNullOrEmpty(loginUser) || string.IsNullOrEmpty(passUser))
             {
                 ErrorLabel.Content = "Пожалуйста, заполните все поля.";
                 return;
             }
 
-            // Используем русские названия таблицы и полей
-            DataTable dt = dataBase.GetDataTable($"SELECT id, Логин, Пароль FROM УчетныеЗаписи WHERE Логин='{loginUser}'");
-
-            if (dt.Rows.Count == 1)
+            try
             {
-                string hashedPassword = dt.Rows[0]["Пароль"].ToString();
-                if (BCrypt.Net.BCrypt.Verify(passUser, hashedPassword))
+                // Используем параметризованный запрос для предотвращения SQL-инъекции
+                string query = "SELECT id, Логин, Пароль FROM УчетныеЗаписи WHERE Логин = @Логин";
+                using (SqlConnection connection = new SqlConnection(dataBase.GetConnectionString()))
                 {
-                    MainWindow frm = new MainWindow(loginUser); // Передаем логин в MainWindow
-                    this.Hide();
-                    frm.ShowDialog();
-                    this.Show();
-                }
-                else
-                {
-                    ErrorLabel.Content = "Неверный пароль.";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Логин", loginUser);
+                        connection.Open();
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                string hashedPassword = reader["Пароль"].ToString();
+                                if (BCrypt.Net.BCrypt.Verify(passUser, hashedPassword))
+                                {
+                                    MainWindow frm = new MainWindow(loginUser); // Передаем логин в MainWindow
+                                    this.Hide();
+                                    frm.ShowDialog();
+                                    this.Show();
+                                }
+                                else
+                                {
+                                    ErrorLabel.Content = "Неверный пароль.";
+                                }
+                            }
+                            else
+                            {
+                                ErrorLabel.Content = "Логин не найден.";
+                            }
+                        }
+                    }
                 }
             }
-            else
+            catch (SqlException ex)
             {
-                ErrorLabel.Content = "Логин не найден.";
+                // Обработка ошибок подключения к БД
+                ErrorLabel.Content = "Ошибка подключения к базе данных. Пожалуйста, проверьте настройки подключения.";
+                // Логирование ошибки (опционально)
+                // Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Обработка других ошибок
+                ErrorLabel.Content = "Произошла ошибка. Пожалуйста, попробуйте еще раз.";
+                // Логирование ошибки (опционально)
+                // Console.WriteLine(ex.Message);
             }
         }
 

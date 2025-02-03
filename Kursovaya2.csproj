@@ -320,6 +320,21 @@
   <ItemGroup>
     <Resource Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DataBaseIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="KeyAuth.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="AddUser.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Report.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pencil.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

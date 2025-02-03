@@ -6,7 +6,7 @@
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen" 
         ResizeMode="NoResize"
-        Background="#F5F5F5">
+        Background="#F5F5F5" Icon="/KeyAuth.png">
     <Window.Resources>
         <!-- Стиль для кнопки с градиентом и эффектами -->
         <Style TargetType="Button" x:Key="GreenGradientButtonStyle">

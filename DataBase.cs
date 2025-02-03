@@ -1,6 +1,7 @@
 ﻿using System;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace Kursovaya2
 {
@@ -16,7 +17,7 @@ namespace Kursovaya2
         }
 
         // Метод для получения строки подключения
-        private string GetConnectionString()
+        public string GetConnectionString()
         {
             // Здесь можно использовать конфигурационный файл для хранения строки подключения
             // Но для простоты я использую строку подключения напрямую
@@ -42,22 +43,16 @@ namespace Kursovaya2
         }
 
         // Метод для выполнения запросов, которые не возвращают данные (например, INSERT, UPDATE, DELETE)
-        public void ExecuteQuery(string query)
+        public bool ExecuteQuery(string query)
         {
-            try
+            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
             {
-                OpenConnection();
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.ExecuteNonQuery();
-            }
-            catch (MySqlException ex)
-            {
-                // Обработка ошибок
-                Console.WriteLine("Ошибка при выполнении запроса: " + ex.Message);
-            }
-            finally
-            {
-                CloseConnection();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    return rowsAffected > 0;
+                }
             }
         }
 
