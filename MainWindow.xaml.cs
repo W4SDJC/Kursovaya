@@ -110,10 +110,11 @@ namespace Kursovaya2
             {
                 case "ТехническиеОсмотры":
                     queryString = @"
+                SET lc_time_names = 'ru_RU';
                 SELECT 
                     ТО.id,
                     ОБ.НомерОборудования,
-                    ТО.ДатаОсмотра,
+                    DATE_FORMAT( ТО.ДатаОсмотра , '%d %M %Y' ) as 'Дата Осмотра',
                     ТО.Результат,
                     ТО.Причина,
                     С.ТабельныйНомер,
@@ -129,20 +130,22 @@ namespace Kursovaya2
 
                 case "ОтказыОборудования":
                     queryString = @"
+                SET lc_time_names = 'ru_RU';
                 SELECT 
                     ОО.id,
-                    ОБ.НомерОборудования,
-                    ОО.ДатаОтказа,
+                    ОБ.Название,
+                    DATE_FORMAT( ОО.ДатаОтказа , '%d %M %Y' ) as 'Дата Отказа',
                     ОО.Причина,
                     С.ТабельныйНомер,
                     С.Имя,
-                    С.Должность
+                    С.Должность                    
                 FROM 
                     ОтказыОборудования ОО
                 JOIN 
-                    Оборудование ОБ ON ОО.ОборудованиеID = ОБ.id
+                    Оборудование ОБ ON ОО.ОборудованиеID = ОБ.ID
                 JOIN 
                     Сотрудники С ON ОО.СотрудникID = С.id";
+                
                     break;
 
                 // Добавьте другие таблицы и их соответствующие запросы
@@ -346,15 +349,25 @@ namespace Kursovaya2
             switch (selectedTable)
             {
                 case "Сотрудники":
-                    queryString = $@"SELECT * FROM Сотрудники WHERE имя LIKE '%{searchText}%'";
+                    queryString = $@"SELECT * FROM Сотрудники 
+                 WHERE Имя LIKE '%{searchText}%' 
+                 OR ТабельныйНомер LIKE '%{searchText}%' 
+                 OR Должность LIKE '%{searchText}%'";
                     break;
 
                 case "ПроизводственныеУчастки":
-                    queryString = $@"SELECT * FROM ПроизводственныеУчастки WHERE название LIKE '%{searchText}%'";
+                    queryString = $@"SELECT * FROM ПроизводственныеУчастки 
+                    WHERE Название LIKE '%{searchText}%' 
+                    OR НомерУчастка LIKE '%{searchText}%'"; 
                     break;
 
                 case "Оборудование":
-                    queryString = $@"SELECT * FROM Оборудование WHERE название LIKE '%{searchText}%'";
+                    queryString = $@"SELECT * FROM Оборудование 
+                 WHERE Название LIKE '%{searchText}%' 
+                 OR id LIKE '%{searchText}%' 
+                 OR НомерОборудования LIKE '%{searchText}%' 
+                 OR Тип LIKE '%{searchText}%' 
+                 OR УчастокID LIKE '%{searchText}%'";
                     break;
 
                 case "ТехническиеОсмотры":
@@ -362,22 +375,55 @@ namespace Kursovaya2
                     DateTime searchDate;
                     if (DateTime.TryParseExact(searchText, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out searchDate))
                     {
-                        queryString = $@"SELECT ТО.*, ОБ.НомерОборудования, С.ТабельныйНомер, С.Имя, С.Должность
-                                 FROM ТехническиеОсмотры ТО
-                                 JOIN Оборудование ОБ ON ТО.ОборудованиеID = ОБ.id
-                                 JOIN Сотрудники С ON ТО.СотрудникID = С.id
-                                 WHERE ТО.ДатаОсмотра = '{searchDate.ToString("yyyy-MM-dd")}'";
+                        queryString = $@"
+                         SET lc_time_names = 'ru_RU';
+                         SELECT ОБ.НомерОборудования, ТО.*,С.ТабельныйНомер, С.Имя, С.Должность
+                         FROM ТехническиеОсмотры ТО
+                         JOIN Оборудование ОБ ON ТО.ОборудованиеID = ОБ.id
+                         JOIN Сотрудники С ON ТО.СотрудникID = С.id
+                         WHERE DATE_FORMAT( ТО.ДатаОсмотра , '%d %M %Y' ) = '{searchDate.ToString("yyyy-MM-dd")}'";
                     }
                     else
                     {
                         // Если дата не распознана, ищем по другим полям
-                        queryString = $@"SELECT ТО.*, ОБ.НомерОборудования, С.ТабельныйНомер, С.Имя, С.Должность
-                                 FROM ТехническиеОсмотры ТО
-                                 JOIN Оборудование ОБ ON ТО.ОборудованиеID = ОБ.id
-                                 JOIN Сотрудники С ON ТО.СотрудникID = С.id
-                                 WHERE ОБ.НомерОборудования LIKE '%{searchText}%' OR С.ТабельныйНомер LIKE '%{searchText}%' OR С.Имя LIKE '%{searchText}%'";
+                        queryString = $@"
+                SET lc_time_names = 'ru_RU';
+                 SELECT ТО.id, ТО.ОборудованиеID, DATE_FORMAT( ТО.ДатаОсмотра , '%d %M %Y' ) AS ДатаОсмотра, ТО.Результат, ТО.Причина, ТО.СотрудникID
+                 FROM ТехническиеОсмотры ТО
+                 JOIN Оборудование ОБ ON ТО.ОборудованиеID = ОБ.id
+                 JOIN Сотрудники С ON ТО.СотрудникID = С.id
+                 WHERE ОБ.НомерОборудования LIKE '%{searchText}%' 
+                 OR С.ТабельныйНомер LIKE '%{searchText}%' 
+                 OR С.Имя LIKE '%{searchText}%' 
+                 OR CAST(ТО.id AS CHAR) LIKE '%{searchText}%' 
+                 OR CAST(ТО.ОборудованиеID AS CHAR) LIKE '%{searchText}%' 
+                 OR DATE_FORMAT( ТО.ДатаОсмотра , '%d %M %Y' ) LIKE '%{searchText}%' 
+                 OR ТО.Результат LIKE '%{searchText}%' 
+                 OR ТО.Причина LIKE '%{searchText}%' 
+                 OR CAST(ТО.СотрудникID AS CHAR) LIKE '%{searchText}%'";
                     }
                     break;
+                case "ОтказыОборудования":
+                    queryString = $@"
+                    SELECT
+                    ОО.id,
+                    ОБ.Название,
+                    DATE_FORMAT( ОО.ДатаОтказа , '%d %M %Y' ) as 'Дата Отказа',
+                    ОО.Причина,
+                    С.ТабельныйНомер,
+                    С.Имя,
+                    С.Должность
+                    FROM                  
+                    ОтказыОборудования ОО
+                JOIN 
+                    Оборудование ОБ ON ОО.ОборудованиеID = ОБ.ID
+                JOIN 
+                    Сотрудники С ON ОО.СотрудникID = С.id 
+                 WHERE CAST(ОО.id AS CHAR) LIKE '%{searchText}%' 
+                 OR CAST(ОБ.Название AS CHAR) LIKE '%{searchText}%' 
+                 OR CAST(ДатаОтказа AS CHAR) LIKE '%{searchText}%' 
+                 OR Причина LIKE '%{searchText}%' 
+                 OR CAST(СотрудникID AS CHAR) LIKE '%{searchText}%'"; break;
 
                 default:
                     // Для других таблиц поиск не предусмотрен
