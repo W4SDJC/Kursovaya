@@ -181,7 +181,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="805" Grid.ColumnSpan="2" Margin="458,-5,0,5">
                 <TextBlock Text="Поиск" Foreground="Black" FontSize="12"
                HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                <TextBox x:Name="SearchTextBox" Width="205" Height="30" Margin="5"  TextChanged="SearchTextBox_TextChanged" Text="" Background="White" BorderBrush="#FF004812" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBox x:Name="SearchTextBox" Width="205" Height="30" Margin="5" Text="" Background="White" BorderBrush="#FF004812" HorizontalAlignment="Center" VerticalAlignment="Center" TextChanged="TextBox_TextChanged" />
                 <Button Content="Добавить" Click="AddButton_Click" Width="110" Height="40" Style="{StaticResource GreenButtonStyle}" Foreground="Black"/>
                 <Button Content="Редактировать" Click="EditButton_Click" Width="110" Height="40" Margin="5" Style="{StaticResource GreenButtonStyle}" Foreground="Black"/>
                 <Button Content="Удалить" Click="DeleteButton_Click" Width="110" Height="40" Margin="5" Style="{StaticResource GreenButtonStyle}" Foreground="Black"/>

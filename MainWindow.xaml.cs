@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Generic;
 using System.Windows.Input;
+using System.Windows.Threading;
+using DocumentFormat.OpenXml.Vml;
 namespace Kursovaya2
 {
     public partial class MainWindow : Window
@@ -15,9 +17,15 @@ namespace Kursovaya2
 
         DataBase dataBase = new DataBase();
         // Новый конструктор, который принимает логин
+        private DispatcherTimer _timer;
+
         public MainWindow(string login)
         {
             InitializeComponent();
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(0.5); // Задержка 1 секунда
+            _timer.Tick += Timer_Tick;
+
             currentUserLogin = login;
             // Устанавливаем логин в Label
             LabelCurrentUser.Content = currentUserLogin;
@@ -27,6 +35,31 @@ namespace Kursovaya2
             // Подписываемся на событие PreviewKeyDown
             MyDataGrid.PreviewKeyDown += MyDataGrid_PreviewKeyDown;
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Сбрасываем таймер при каждом изменении текста
+            _timer.Stop();
+            _timer.Start();
+        }
+
+        // Обработчик срабатывания таймера
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            // Останавливаем таймер
+            _timer.Stop();
+
+            // Выполняем нужное действие
+            ProcessTextChange();
+        }
+        private void ProcessTextChange()
+        {
+            // Ваш код для обработки изменения текста
+            string text = SearchTextBox.Text;
+            Search();
+            SearchTextBox.Focus();
+        }
+
         // Существующий конструктор без параметров (можно удалить, если он не нужен)
         public MainWindow()
         {
@@ -333,7 +366,7 @@ namespace Kursovaya2
 
 
 
-        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void Search()
         {
             string searchText = SearchTextBox.Text.Trim();
             string selectedTable = TNComboBox.SelectedItem?.ToString().Trim();
@@ -358,16 +391,18 @@ namespace Kursovaya2
                 case "ПроизводственныеУчастки":
                     queryString = $@"SELECT * FROM ПроизводственныеУчастки 
                     WHERE Название LIKE '%{searchText}%' 
-                    OR НомерУчастка LIKE '%{searchText}%'"; 
+                    OR НомерУчастка LIKE '%{searchText}%'";
                     break;
 
                 case "Оборудование":
-                    queryString = $@"SELECT * FROM Оборудование 
-                 WHERE Название LIKE '%{searchText}%' 
-                 OR id LIKE '%{searchText}%' 
-                 OR НомерОборудования LIKE '%{searchText}%' 
-                 OR Тип LIKE '%{searchText}%' 
-                 OR УчастокID LIKE '%{searchText}%'";
+                    queryString = $@"SELECT ОБ.id, ОБ.НомерОборудования, ОБ.Название, ОБ.Тип, ПУ.Название AS 'Участок'
+	             FROM Оборудование ОБ
+	             JOIN ПроизводственныеУчастки ПУ ON ОБ.УчастокID = ПУ.id
+                 WHERE ОБ.Название LIKE '%{searchText}%' 
+                 OR ОБ.id LIKE '%{searchText}%' 
+                 OR ОБ.НомерОборудования LIKE '%{searchText}%' 
+                 OR ОБ.Тип LIKE '%{searchText}%' 
+                 OR ПУ.Название LIKE '%{searchText}%'";
                     break;
 
                 case "ТехническиеОсмотры":
@@ -388,7 +423,8 @@ namespace Kursovaya2
                         // Если дата не распознана, ищем по другим полям
                         queryString = $@"
                 SET lc_time_names = 'ru_RU';
-                 SELECT ТО.id, ТО.ОборудованиеID, DATE_FORMAT( ТО.ДатаОсмотра , '%d %M %Y' ) AS ДатаОсмотра, ТО.Результат, ТО.Причина, ТО.СотрудникID
+                 SELECT
+                 ТО.id, ТО.ОборудованиеID, DATE_FORMAT( ТО.ДатаОсмотра , '%d %M %Y' ) AS ДатаОсмотра, ТО.Результат, ТО.Причина, ТО.СотрудникID
                  FROM ТехническиеОсмотры ТО
                  JOIN Оборудование ОБ ON ТО.ОборудованиеID = ОБ.id
                  JOIN Сотрудники С ON ТО.СотрудникID = С.id
@@ -428,6 +464,7 @@ namespace Kursovaya2
                 default:
                     // Для других таблиц поиск не предусмотрен
                     return;
+                    
             }
 
             try
@@ -523,7 +560,7 @@ namespace Kursovaya2
         private List<Equipment> GetEquipment()
         {
             List<Equipment> equipmentList = new List<Equipment>();
-            string query = "SELECT id, номероборудования, название, тип FROM Оборудование";
+            string query = "SELECT id, НомерОборудования, Название, Тип FROM Оборудование";
             DataTable dt = dataBase.GetDataTable(query);
             foreach (DataRow row in dt.Rows)
             {
