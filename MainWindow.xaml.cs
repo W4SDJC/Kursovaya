@@ -36,7 +36,7 @@ namespace Kursovaya2
             MyDataGrid.PreviewKeyDown += MyDataGrid_PreviewKeyDown;
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             // Сбрасываем таймер при каждом изменении текста
             _timer.Stop();
